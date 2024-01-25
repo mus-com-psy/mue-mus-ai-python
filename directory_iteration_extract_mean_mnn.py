@@ -5,11 +5,12 @@
 # Requires
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 import pretty_midi
 
 # Can't be bothered with individual user paths for this example!
-in_dir = '/home/txc970/project_files/midis_for_mmi_music_ai/hello_world'
-# midi_file_path = 'short_file.mid'
+in_dir = "/home/txc970/project_files/midis_for_mmi_music_ai/hello_world"
+out_file_name = "mean_mnns"
 
 # Parameters
 # ...
@@ -51,3 +52,21 @@ for file in files:
     my_arr.append(mean_mnn)
 
 print("my_arr:", my_arr)
+# Histogram plot
+# Plotting the histogram
+plt.hist(my_arr, bins=20, color='blue', edgecolor='black')
+
+# Adding labels and title
+plt.xlabel('Mean MIDI note number')
+plt.ylabel('Frequency of observation')
+plt.title('Histogram of mean MIDI note numbers')
+
+# Save the plot to a PNG file
+plt.savefig('histogram_plot.png')
+
+# Close the plot to free up resources (optional)
+plt.close()
+
+with open(out_file_name, "w") as out_file:
+    for x in my_arr:
+        out_file.write(f'{x}\n')
