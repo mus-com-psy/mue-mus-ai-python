@@ -8,7 +8,7 @@ import numpy as np
 import pretty_midi
 
 # Can't be bothered with individual user paths for this example!
-midi_directory = '/home/txc970/project_files/midis_for_mmi_music_ai/hello_world'
+in_dir = '/home/txc970/project_files/midis_for_mmi_music_ai/hello_world'
 # midi_file_path = 'short_file.mid'
 
 # Parameters
@@ -19,30 +19,35 @@ my_arr = []
 # const myObj = {}
 
 # Import and analyse the MIDI files.
-files = os.listdir(midi_directory)
+files = os.listdir(in_dir)
 files = [file for file in files if file.endswith('.mid')]
-print("files.length:", files.length)
+print("len(files):", len(files))
+
+for file in files:
+    midi_file_path = os.path.join(in_dir, file)
 
 
-# Load MIDI file
-midi_data = pretty_midi.PrettyMIDI(midi_file_path)
+    # Load MIDI file
+    midi_data = pretty_midi.PrettyMIDI(midi_file_path)
+    all_mnns = []
 
-# Accessing instruments
-for i, instrument in enumerate(midi_data.instruments):
-    print(f"Instrument {i} - Program: {instrument.program}, Is Drum: {instrument.is_drum}")
+    # Accessing instruments
+    for i, instrument in enumerate(midi_data.instruments):
+        print(f"Instrument {i} - Program: {instrument.program}, Is Drum: {instrument.is_drum}")
 
-# Accessing notes
-for i, instrument in enumerate(midi_data.instruments):
-    print(f"Notes for Instrument {i}:")
-    for note in instrument.notes:
-        print(f"Start: {note.start}, End: {note.end}, Pitch: {note.pitch}, Velocity: {note.velocity}")
-        my_arr.append(note.pitch)
+    # Accessing notes
+    for i, instrument in enumerate(midi_data.instruments):
+        print(f"Notes for Instrument {i}:")
+        for note in instrument.notes:
+            print(f"Start: {note.start}, End: {note.end}, Pitch: {note.pitch}, Velocity: {note.velocity}")
+            all_mnns.append(note.pitch)
 
-# Convert the MIDI note numbers list to a numpy array.
-mnn_arr = np.array(my_arr)
+    # Convert the MIDI note numbers list to a numpy array.
+    all_mnns_arr = np.array(all_mnns)
+    # Calculate the mean.
+    mean_mnn = np.mean(all_mnns_arr)
+    # Print the result.
+    print("Mean MNN:", mean_mnn)
+    my_arr.append(mean_mnn)
 
-# Calculate the mean.
-mean_mnn = np.mean(mnn_arr)
-
-# Print the result.
-print("Mean MNN:", mean_mnn)
+print("my_arr:", my_arr)
