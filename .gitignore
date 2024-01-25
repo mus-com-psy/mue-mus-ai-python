@@ -1,3 +1,28 @@
+#
+solutions/
+
+# OS
+.DS_Store
+
+# Audio
+*.m4a
+*.mp3
+*.wav
+*.asd
+
+# Symbolic
+*.mid
+*.xml
+
+# Studio files
+*.logicx
+*.aup3
+*.mpd
+*.als
+
+# Data files (trained models)
+io/
+
 # Editors
 .vscode/
 .idea/
