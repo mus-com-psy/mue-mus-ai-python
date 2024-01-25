@@ -10,7 +10,7 @@ import pretty_midi
 
 # Can't be bothered with individual user paths for this example!
 in_dir = "/home/txc970/project_files/midis_for_mmi_music_ai/hello_world"
-out_file_name = "mean_mnns"
+out_file_name = "mean_mnns.txt"
 
 # Parameters
 # ...
