@@ -3,11 +3,13 @@
 # writing them to file.
 
 # Requires
+import os
 import numpy as np
 import pretty_midi
 
 # Can't be bothered with individual user paths for this example!
-midi_file_path = 'short_file.mid'
+midi_directory = '/home/txc970/project_files/midis_for_mmi_music_ai/hello_world'
+# midi_file_path = 'short_file.mid'
 
 # Parameters
 # ...
@@ -15,6 +17,12 @@ midi_file_path = 'short_file.mid'
 # Declare/initialize the variables that will contain the results of the analysis.
 my_arr = []
 # const myObj = {}
+
+# Import and analyse the MIDI files.
+files = os.listdir(midi_directory)
+files = [file for file in files if file.endswith('.mid')]
+print("files.length:", files.length)
+
 
 # Load MIDI file
 midi_data = pretty_midi.PrettyMIDI(midi_file_path)
