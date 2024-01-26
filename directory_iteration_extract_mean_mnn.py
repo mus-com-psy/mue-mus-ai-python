@@ -63,12 +63,12 @@ for file in files:
         all_mnns = []
 
         # Accessing instruments
-        for i, instrument in enumerate(midi_data.instruments):
-            print(f"Instrument {i} - Program: {instrument.program}, Is Drum: {instrument.is_drum}")
+        # for i, instrument in enumerate(midi_data.instruments):
+        #     print(f"Instrument {i} - Program: {instrument.program}, Is Drum: {instrument.is_drum}")
 
         # Accessing notes
         for i, instrument in enumerate(midi_data.instruments):
-            print(f"Notes for Instrument {i}:")
+            # print(f"Notes for Instrument {i}:")
             for note in instrument.notes:
                 # print(f"Start: {note.start}, End: {note.end}, Pitch: {note.pitch}, Velocity: {note.velocity}")
                 all_mnns.append(note.pitch)
@@ -99,6 +99,6 @@ plt.savefig("histogram_plot.png")
 # Close the plot to free up resources (optional)
 plt.close()
 
-with open(os.path.join(main_path["out_dir"], main_path[out_file_name]), "w") as out_file:
+with open(os.path.join(main_path["out_dir"], main_path["out_file_name"]), "w") as out_file:
     for x in my_arr:
         out_file.write(f"{x}\n")
