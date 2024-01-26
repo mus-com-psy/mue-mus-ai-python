@@ -38,6 +38,7 @@ my_arr = []
 # const myObj = {}
 
 # Import and analyse the MIDI files.
+argumentList = sys.argv[1:]
 arguments, values = getopt.getopt(argumentList, options, long_options)
 try:
     for currentArgument, currentValue in arguments:
