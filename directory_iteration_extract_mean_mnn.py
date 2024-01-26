@@ -94,7 +94,7 @@ plt.ylabel("Frequency of observation")
 plt.title("Histogram of mean MIDI note numbers")
 
 # Save the plot to a PNG file
-plt.savefig("histogram_plot.png")
+plt.savefig(os.path.join(main_path["out_dir"], "histogram_plot.png"))
 
 # Close the plot to free up resources (optional)
 plt.close()
