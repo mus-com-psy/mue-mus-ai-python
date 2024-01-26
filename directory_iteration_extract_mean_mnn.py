@@ -26,7 +26,7 @@ mainPaths = {
   }
 }
 options = "u:"
-longOptions = ["User="]
+long_options = ["User="]
 # in_dir = "/home/txc970/project_files/midis_for_mmi_music_ai/hip_hop_midi/mid"
 # out_file_name = "mean_mnns.txt"
 
