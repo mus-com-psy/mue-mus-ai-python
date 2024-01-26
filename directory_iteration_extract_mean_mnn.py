@@ -12,16 +12,16 @@ import pretty_midi
 # Individual user paths
 main_paths = {
   "tom": {
-    "inDir": os.path.join(
+    "in_dir": os.path.join(
       "/home", "txc970", "project_files", "midis_for_mmi_music_ai",
       "hip_hop_midi", "mid"
     ),
-    "outDir": os.path.join(
+    "out_dir": os.path.join(
       "/home", "txc970", "repos", "mmi-mus-ai-python", "out"
     ),
-    "outFileName": "mean_mnns"
+    "out_file_name": "mean_mnns"
   },
-  "anotherUser": {
+  "another_user": {
     # ...
   }
 }
@@ -49,12 +49,12 @@ except getopt.error as err:
     # output error, and return with an error code
     print(str(err))
 
-files = os.listdir(main_path["inDir"])
+files = os.listdir(main_path["in_dir"])
 files = [file for file in files if file.endswith(".mid")]
 print("len(files):", len(files))
 
 for file in files:
-    midi_file_path = os.path.join(main_path["inDir"], file)
+    midi_file_path = os.path.join(main_path["in_dir"], file)
     print("file:", file)
 
     try:
@@ -99,6 +99,6 @@ plt.savefig("histogram_plot.png")
 # Close the plot to free up resources (optional)
 plt.close()
 
-with open(out_file_name, "w") as out_file:
+with open(os.path.join(main_path["out_dir"], main_path[out_file_name]), "w") as out_file:
     for x in my_arr:
         out_file.write(f"{x}\n")
