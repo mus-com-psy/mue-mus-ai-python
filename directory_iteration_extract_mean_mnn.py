@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import pretty_midi
 
 # Individual user paths
-mainPaths = {
+main_paths = {
   "tom": {
     "inDir": os.path.join(
       "/home", "txc970", "project_files", "midis_for_mmi_music_ai", "hip_hop",
