@@ -34,11 +34,11 @@ for file in files:
 
     # Accessing instruments
     for i, instrument in enumerate(midi_data.instruments):
-        # print(f"Instrument {i} - Program: {instrument.program}, Is Drum: {instrument.is_drum}")
+        print(f"Instrument {i} - Program: {instrument.program}, Is Drum: {instrument.is_drum}")
 
     # Accessing notes
     for i, instrument in enumerate(midi_data.instruments):
-        # print(f"Notes for Instrument {i}:")
+        print(f"Notes for Instrument {i}:")
         for note in instrument.notes:
             # print(f"Start: {note.start}, End: {note.end}, Pitch: {note.pitch}, Velocity: {note.velocity}")
             all_mnns.append(note.pitch)
