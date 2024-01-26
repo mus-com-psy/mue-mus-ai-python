@@ -38,13 +38,13 @@ my_arr = []
 # const myObj = {}
 
 # Import and analyse the MIDI files.
-argumentList = sys.argv[1:]
-arguments, values = getopt.getopt(argumentList, options, long_options)
+argument_list = sys.argv[1:]
+arguments, values = getopt.getopt(argument_list, options, long_options)
 try:
-    for currentArgument, currentValue in arguments:
+    for current_argument, current_value in arguments:
         if currentArgument in ("-u", "--User"):
             print("User!")
-            mainPath = mainPaths[currentValue]
+            main_path = main_paths[current_value]
 except getopt.error as err:
     # output error, and return with an error code
     print(str(err))
