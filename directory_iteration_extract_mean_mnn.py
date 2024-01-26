@@ -4,13 +4,31 @@
 
 # Requires
 import os
+import getopt, sys
 import numpy as np
 import matplotlib.pyplot as plt
 import pretty_midi
 
-# Can't be bothered with individual user paths for this example!
-in_dir = "/home/txc970/project_files/midis_for_mmi_music_ai/hip_hop_midi/mid"
-out_file_name = "mean_mnns.txt"
+// Individual user paths
+mainPaths = {
+  "tom": {
+    "inDir": os.path.join(
+      "/home", "txc970", "project_files", "midis_for_mmi_music_ai", "hip_hop",
+      "mid"
+    ),
+    "outDir": path.join(
+      "/home", "txc970", "repos", "mmi-mus-ai-python", "out"
+    ),
+    "outFileName": "mean_mnns"
+  },
+  "anotherUser": {
+    # ...
+  }
+}
+options = "u:"
+longOptions = ["User="]
+# in_dir = "/home/txc970/project_files/midis_for_mmi_music_ai/hip_hop_midi/mid"
+# out_file_name = "mean_mnns.txt"
 
 # Parameters
 # ...
@@ -20,6 +38,16 @@ my_arr = []
 # const myObj = {}
 
 # Import and analyse the MIDI files.
+arguments, values = getopt.getopt(argumentList, options, long_options)
+try:
+    for currentArgument, currentValue in arguments:
+        if currentArgument in ("-u", "--User"):
+            print("User!")
+            mainPath = mainPaths[currentValue]
+except getopt.error as err:
+    # output error, and return with an error code
+    print(str(err))
+
 files = os.listdir(in_dir)
 files = [file for file in files if file.endswith(".mid")]
 print("len(files):", len(files))
