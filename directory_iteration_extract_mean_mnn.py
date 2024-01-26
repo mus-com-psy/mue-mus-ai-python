@@ -16,7 +16,7 @@ mainPaths = {
       "/home", "txc970", "project_files", "midis_for_mmi_music_ai", "hip_hop",
       "mid"
     ),
-    "outDir": path.join(
+    "outDir": os.path.join(
       "/home", "txc970", "repos", "mmi-mus-ai-python", "out"
     ),
     "outFileName": "mean_mnns"
