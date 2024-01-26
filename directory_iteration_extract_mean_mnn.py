@@ -13,8 +13,8 @@ import pretty_midi
 main_paths = {
   "tom": {
     "inDir": os.path.join(
-      "/home", "txc970", "project_files", "midis_for_mmi_music_ai", "hip_hop",
-      "mid"
+      "/home", "txc970", "project_files", "midis_for_mmi_music_ai",
+      "hip_hop_midi", "mid"
     ),
     "outDir": os.path.join(
       "/home", "txc970", "repos", "mmi-mus-ai-python", "out"
