@@ -42,7 +42,7 @@ argument_list = sys.argv[1:]
 arguments, values = getopt.getopt(argument_list, options, long_options)
 try:
     for current_argument, current_value in arguments:
-        if currentArgument in ("-u", "--User"):
+        if current_argument in ("-u", "--User"):
             print("User!")
             main_path = main_paths[current_value]
 except getopt.error as err:
