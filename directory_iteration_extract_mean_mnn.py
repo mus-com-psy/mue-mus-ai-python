@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import pretty_midi
 
 # Can't be bothered with individual user paths for this example!
-in_dir = "/home/txc970/project_files/midis_for_mmi_music_ai/hip_hop_midi"
+in_dir = "/home/txc970/project_files/midis_for_mmi_music_ai/hip_hop_midi/mid"
 out_file_name = "mean_mnns.txt"
 
 # Parameters
