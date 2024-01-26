@@ -54,7 +54,7 @@ files = [file for file in files if file.endswith(".mid")]
 print("len(files):", len(files))
 
 for file in files:
-    midi_file_path = os.path.join(in_dir, file)
+    midi_file_path = os.path.join(main_path["inDir"], file)
     print("file:", file)
 
     try:
