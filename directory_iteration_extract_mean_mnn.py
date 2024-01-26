@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pretty_midi
 
-// Individual user paths
+# Individual user paths
 mainPaths = {
   "tom": {
     "inDir": os.path.join(
