@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import pretty_midi
 
 # Can't be bothered with individual user paths for this example!
-in_dir = "/home/txc970/project_files/midis_for_mmi_music_ai/hello_world"
+in_dir = "/home/txc970/project_files/midis_for_mmi_music_ai/hip_hop_midi"
 out_file_name = "mean_mnns.txt"
 
 # Parameters
@@ -21,12 +21,12 @@ my_arr = []
 
 # Import and analyse the MIDI files.
 files = os.listdir(in_dir)
-files = [file for file in files if file.endswith('.mid')]
+files = [file for file in files if file.endswith(".mid")]
 print("len(files):", len(files))
 
 for file in files:
     midi_file_path = os.path.join(in_dir, file)
-
+    print("file:", file)
 
     # Load MIDI file
     midi_data = pretty_midi.PrettyMIDI(midi_file_path)
@@ -34,13 +34,13 @@ for file in files:
 
     # Accessing instruments
     for i, instrument in enumerate(midi_data.instruments):
-        print(f"Instrument {i} - Program: {instrument.program}, Is Drum: {instrument.is_drum}")
+        # print(f"Instrument {i} - Program: {instrument.program}, Is Drum: {instrument.is_drum}")
 
     # Accessing notes
     for i, instrument in enumerate(midi_data.instruments):
-        print(f"Notes for Instrument {i}:")
+        # print(f"Notes for Instrument {i}:")
         for note in instrument.notes:
-            print(f"Start: {note.start}, End: {note.end}, Pitch: {note.pitch}, Velocity: {note.velocity}")
+            # print(f"Start: {note.start}, End: {note.end}, Pitch: {note.pitch}, Velocity: {note.velocity}")
             all_mnns.append(note.pitch)
 
     # Convert the MIDI note numbers list to a numpy array.
@@ -54,19 +54,19 @@ for file in files:
 print("my_arr:", my_arr)
 # Histogram plot
 # Plotting the histogram
-plt.hist(my_arr, bins=20, color='blue', edgecolor='black')
+plt.hist(my_arr, bins=20, color="blue", edgecolor="black")
 
 # Adding labels and title
-plt.xlabel('Mean MIDI note number')
-plt.ylabel('Frequency of observation')
-plt.title('Histogram of mean MIDI note numbers')
+plt.xlabel("Mean MIDI note number")
+plt.ylabel("Frequency of observation")
+plt.title("Histogram of mean MIDI note numbers")
 
 # Save the plot to a PNG file
-plt.savefig('histogram_plot.png')
+plt.savefig("histogram_plot.png")
 
 # Close the plot to free up resources (optional)
 plt.close()
 
 with open(out_file_name, "w") as out_file:
     for x in my_arr:
-        out_file.write(f'{x}\n')
+        out_file.write(f"{x}\n")
