@@ -19,7 +19,7 @@ main_paths = {
     "out_dir": os.path.join(
       "/home", "txc970", "repos", "mmi-mus-ai-python", "out"
     ),
-    "out_file_name": "mean_mnns"
+    "out_file_name": "mean_mnns.txt"
   },
   "another_user": {
     # ...
