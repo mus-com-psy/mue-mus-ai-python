@@ -49,7 +49,7 @@ except getopt.error as err:
     # output error, and return with an error code
     print(str(err))
 
-files = os.listdir(in_dir)
+files = os.listdir(main_path["inDir"])
 files = [file for file in files if file.endswith(".mid")]
 print("len(files):", len(files))
 
