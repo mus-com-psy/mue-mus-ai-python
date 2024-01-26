@@ -28,28 +28,31 @@ for file in files:
     midi_file_path = os.path.join(in_dir, file)
     print("file:", file)
 
-    # Load MIDI file
-    midi_data = pretty_midi.PrettyMIDI(midi_file_path)
-    all_mnns = []
+    try:
+        # Load MIDI file
+        midi_data = pretty_midi.PrettyMIDI(midi_file_path)
+        all_mnns = []
 
-    # Accessing instruments
-    for i, instrument in enumerate(midi_data.instruments):
-        print(f"Instrument {i} - Program: {instrument.program}, Is Drum: {instrument.is_drum}")
+        # Accessing instruments
+        for i, instrument in enumerate(midi_data.instruments):
+            print(f"Instrument {i} - Program: {instrument.program}, Is Drum: {instrument.is_drum}")
 
-    # Accessing notes
-    for i, instrument in enumerate(midi_data.instruments):
-        print(f"Notes for Instrument {i}:")
-        for note in instrument.notes:
-            # print(f"Start: {note.start}, End: {note.end}, Pitch: {note.pitch}, Velocity: {note.velocity}")
-            all_mnns.append(note.pitch)
+        # Accessing notes
+        for i, instrument in enumerate(midi_data.instruments):
+            print(f"Notes for Instrument {i}:")
+            for note in instrument.notes:
+                # print(f"Start: {note.start}, End: {note.end}, Pitch: {note.pitch}, Velocity: {note.velocity}")
+                all_mnns.append(note.pitch)
 
-    # Convert the MIDI note numbers list to a numpy array.
-    all_mnns_arr = np.array(all_mnns)
-    # Calculate the mean.
-    mean_mnn = np.mean(all_mnns_arr)
-    # Print the result.
-    print("Mean MNN:", mean_mnn)
-    my_arr.append(mean_mnn)
+        # Convert the MIDI note numbers list to a numpy array.
+        all_mnns_arr = np.array(all_mnns)
+        # Calculate the mean.
+        mean_mnn = np.mean(all_mnns_arr)
+        # Print the result.
+        print("Mean MNN:", mean_mnn)
+        my_arr.append(mean_mnn)
+    except:
+        print("There was an error!")
 
 print("my_arr:", my_arr)
 # Histogram plot
