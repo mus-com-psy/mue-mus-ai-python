@@ -53,6 +53,7 @@ files = os.listdir(main_path["in_dir"])
 files = [file for file in files if file.endswith(".mid")]
 print("len(files):", len(files))
 
+# Iterate.
 for file in files:
     midi_file_path = os.path.join(main_path["in_dir"], file)
     print("file:", file)
@@ -84,7 +85,7 @@ for file in files:
         print("There was an error!")
 
 print("my_arr:", my_arr)
-# Histogram plot
+# Plot/visualize.
 # Plotting the histogram
 plt.hist(my_arr, bins=20, color="blue", edgecolor="black")
 
@@ -93,12 +94,13 @@ plt.xlabel("Mean MIDI note number")
 plt.ylabel("Frequency of observation")
 plt.title("Histogram of mean MIDI note numbers")
 
-# Save the plot to a PNG file
+# Save the plot to a PNG file.
 plt.savefig(os.path.join(main_path["out_dir"], "histogram_plot.png"))
 
-# Close the plot to free up resources (optional)
+# Close the plot to free up resources (optional).
 plt.close()
 
+# Write output to file.
 with open(os.path.join(main_path["out_dir"], main_path["out_file_name"]), "w") as out_file:
     for x in my_arr:
         out_file.write(f"{x}\n")
