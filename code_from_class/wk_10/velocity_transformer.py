@@ -45,8 +45,8 @@ def tokenize_midi_files(file_paths):
         all_tokens.extend(tokens)
 
     except (OSError, ValueError) as e:
-            # Catching common file-related errors or parsing errors
-            print(f"Skipping {file_path} due to an error: {str(e)}")
+        # Catching common file-related errors or parsing errors
+        print(f"Skipping {file_path} due to an error: {str(e)}")
 
     return all_tokens
 
