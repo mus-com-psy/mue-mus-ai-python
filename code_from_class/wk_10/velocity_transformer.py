@@ -184,7 +184,7 @@ def train_model(model, X_train, y_train, X_val, y_val, num_epochs=10, batch_size
         model.train()
         running_loss = 0.0
         print(">>>>>>>Training stage:")
-        for inputs, targets in tqdm(enumerate(train_loader), total=len(train_loader)):
+        for idx, inputs, targets in tqdm(enumerate(train_loader), total=len(train_loader)):
             optimizer.zero_grad()
             targets = torch.unsqueeze(targets, dim=1)
             outputs = model(inputs, targets) # nn.Transformer require both the sequence to the encoder, and that to the decoder as input.
@@ -197,7 +197,7 @@ def train_model(model, X_train, y_train, X_val, y_val, num_epochs=10, batch_size
         model.eval()
         print(">>>>>>>Validation stage:")
         with torch.no_grad():
-            for inputs, targets in tqdm(enumerate(val_loader), total=len(val_loader)):
+            for idx, inputs, targets in tqdm(enumerate(val_loader), total=len(val_loader)):
                 outputs = model(inputs, targets)
                 loss = criterion(outputs, targets)
                 val_loss += loss.item()
