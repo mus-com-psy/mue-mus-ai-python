@@ -74,7 +74,7 @@ def split_midi_files(directory_path, test_size=0.2, val_size=0.1, random_seed=42
     return train_files, val_files, test_files
 
 # Example usage:
-midi_directory = '/home/txc970/project_files/midis_for_mue_music_ai/hip_hop_midi/mid'
+midi_directory = '/home/txc970/project_files/midis_for_mue_music_ai/hip_hop_midi/mid_no_err'
 
 # Step 1: Split MIDI files into train, val, test sets
 train_files, val_files, test_files = split_midi_files(midi_directory)
