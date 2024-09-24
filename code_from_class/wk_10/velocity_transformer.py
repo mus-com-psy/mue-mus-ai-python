@@ -129,7 +129,8 @@ class MidiTransformer(nn.Module):
             d_model=model_dim,
             nhead=num_heads,
             num_encoder_layers=num_layers,
-            dropout=dropout
+            dropout=dropout,
+            batch_first=True
         )
         self.fc = nn.Linear(model_dim, output_dim)
 
