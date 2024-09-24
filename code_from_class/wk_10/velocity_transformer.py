@@ -44,9 +44,9 @@ def tokenize_midi_files(file_paths):
         # Add the tokens from this file to the total token list
         all_tokens.extend(tokens)
 
-    except (mido.midifiles.midifiles.MidiFileError, IOError, ValueError, IndexError) as e:
-        # Catching common MIDI-related errors or file I/O errors
-        print(f"Skipping {file_path} due to an error: {str(e)}")
+    except (OSError, ValueError) as e:
+            # Catching common file-related errors or parsing errors
+            print(f"Skipping {file_path} due to an error: {str(e)}")
 
     return all_tokens
 
