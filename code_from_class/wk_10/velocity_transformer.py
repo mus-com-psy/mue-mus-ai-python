@@ -135,25 +135,27 @@ class MidiTransformer(nn.Module):
         self.fc = nn.Linear(model_dim, output_dim)
 
     def forward(self, src, tgt):
-        # Embed the input tokens (tick, note, velocity)
+        # Embed the input tokens [batch_size, seq_len, (tick, note, velocity)]
         # import pdb; pdb.set_trace()
         src = self.embeddingSrc(src)
 
-        # Embed the output tokens (tick, note, velocity)
-        tgt = torch.unsqueeze(tgt, dim=1)
+        # Embed the output tokens [batch_size, seq_len, (velocity)]
+        # tgt = torch.unsqueeze(tgt, dim=1)
         tgt = torch.unsqueeze(tgt, dim=2)
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         tgt = self.embeddingTgt(tgt)
 
-        # Transformer expects shape (sequence_length, batch_size, model_dim)
-        src = src.transpose(0, 1)
-        tgt = tgt.transpose(0, 1)
+        # Chenyu added 'batch_first=True' in line 133, so we don't need to reshape anymore.
+        # # Transformer expects shape (sequence_length, batch_size, model_dim)
+        # src = src.transpose(0, 1)
+        # tgt = tgt.transpose(0, 1)
 
         # Pass through the transformer
         transformer_out = self.transformer(src, tgt)
 
         # Take only the last output for prediction
-        output = self.fc(transformer_out[-1, :, :])
+        transformer_out = torch.squeeze(transformer_out)
+        output = self.fc(transformer_out)
         return output
 
 # Model instantiation
@@ -182,6 +184,7 @@ def train_model(model, X_train, y_train, X_val, y_val, num_epochs=10, batch_size
         running_loss = 0.0
         for inputs, targets in train_loader:
             optimizer.zero_grad()
+            targets = torch.unsqueeze(targets, dim=1)
             outputs = model(inputs, targets) # nn.Transformer require both the sequence to the encoder, and that to the decoder as input.
             loss = criterion(outputs, targets)
             loss.backward()
