@@ -1,4 +1,4 @@
-mido
-os
-scikit-learn
-torch
+mido==1.2.10
+numpy==1.23.5
+torch==2.0.1  # PyTorch version, you can adjust based on your environment
+scikit-learn==1.3.0
