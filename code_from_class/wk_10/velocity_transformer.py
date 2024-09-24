@@ -36,6 +36,8 @@ def parse_midi(file_path):
         # Catching common file-related errors or parsing errors
         print(f"Skipping {file_path} due to an error: {str(e)}")
 
+        return
+
 def tokenize_midi_files(file_paths):
     """Tokenize all MIDI files from a given list of file paths and combine their tokens."""
     all_tokens = []
