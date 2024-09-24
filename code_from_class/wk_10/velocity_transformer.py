@@ -123,7 +123,8 @@ print(f"Training sequences: {X_train.shape}, Validation sequences: {X_val.shape}
 class MidiTransformer(nn.Module):
     def __init__(self, input_dim, model_dim, num_heads, num_layers, output_dim, dropout=0.1):
         super(MidiTransformer, self).__init__()
-        self.embedding = nn.Linear(input_dim, model_dim)
+        self.embeddingSrc = nn.Linear(input_dim, model_dim)
+        self.embeddingTgt = nn.Linear(output_dim, model_dim)
         self.transformer = nn.Transformer(
             d_model=model_dim,
             nhead=num_heads,
@@ -132,15 +133,19 @@ class MidiTransformer(nn.Module):
         )
         self.fc = nn.Linear(model_dim, output_dim)
 
-    def forward(self, src):
+    def forward(self, src, tgt):
         # Embed the input tokens (tick, note, velocity)
-        src = self.embedding(src)
+        src = self.embeddingSrc(src)
+
+        # Embed the output tokens (tick, note, velocity)
+        tgt = self.embeddingTgt(tgt)
 
         # Transformer expects shape (sequence_length, batch_size, model_dim)
         src = src.transpose(0, 1)
+        tgt = tgt.transpose(0, 1)
 
         # Pass through the transformer
-        transformer_out = self.transformer(src)
+        transformer_out = self.transformer(src, tgt)
 
         # Take only the last output for prediction
         output = self.fc(transformer_out[-1, :, :])
@@ -182,7 +187,7 @@ def train_model(model, X_train, y_train, X_val, y_val, num_epochs=10, batch_size
         model.eval()
         with torch.no_grad():
             for inputs, targets in val_loader:
-                outputs = model(inputs)
+                outputs = model(inputs, targets)
                 loss = criterion(outputs, targets)
                 val_loss += loss.item()
 
