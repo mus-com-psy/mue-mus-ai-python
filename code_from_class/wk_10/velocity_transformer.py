@@ -138,6 +138,7 @@ class MidiTransformer(nn.Module):
         src = self.embeddingSrc(src)
 
         # Embed the output tokens (tick, note, velocity)
+        import pdb; pdb.set_trace()
         tgt = self.embeddingTgt(tgt)
 
         # Transformer expects shape (sequence_length, batch_size, model_dim)
