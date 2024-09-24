@@ -35,18 +35,19 @@ def tokenize_midi_files(file_paths):
     """Tokenize all MIDI files from a given list of file paths and combine their tokens."""
     all_tokens = []
 
-    try:
-        print(f"Processing {file_path}...")
+    for file_path in file_paths:
+        try:
+            print(f"Processing {file_path}...")
 
-        # Try to parse and tokenize the MIDI file
-        tokens = parse_midi(file_path)
+            # Try to parse and tokenize the MIDI file
+            tokens = parse_midi(file_path)
 
-        # Add the tokens from this file to the total token list
-        all_tokens.extend(tokens)
+            # Add the tokens from this file to the total token list
+            all_tokens.extend(tokens)
 
-    except (OSError, ValueError) as e:
-        # Catching common file-related errors or parsing errors
-        print(f"Skipping {file_path} due to an error: {str(e)}")
+        except (OSError, ValueError) as e:
+            # Catching common file-related errors or parsing errors
+            print(f"Skipping {file_path} due to an error: {str(e)}")
 
     return all_tokens
 
