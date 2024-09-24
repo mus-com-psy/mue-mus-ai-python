@@ -172,7 +172,7 @@ def train_model(model, X_train, y_train, X_val, y_val, num_epochs=10, batch_size
         running_loss = 0.0
         for inputs, targets in train_loader:
             optimizer.zero_grad()
-            outputs = model(inputs)
+            outputs = model(inputs, targets) # nn.Transformer require both the sequence to the encoder, and that to the decoder as input.
             loss = criterion(outputs, targets)
             loss.backward()
             optimizer.step()
