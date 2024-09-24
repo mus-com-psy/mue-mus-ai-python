@@ -13,41 +13,41 @@ import torch.optim as optim
 
 def parse_midi(file_path):
     """Parse a single MIDI file and extract tokenized representation."""
-    midi = mido.MidiFile(file_path)
-    tokens = []
-    last_tick = 0
+    try:
+        midi = mido.MidiFile(file_path)
+        tokens = []
+        last_tick = 0
 
-    for msg in midi:
-        if msg.type in ['note_on', 'note_off']:
-            tick_diff = msg.time - last_tick
-            last_tick = msg.time
+        for msg in midi:
+            if msg.type in ['note_on', 'note_off']:
+                tick_diff = msg.time - last_tick
+                last_tick = msg.time
 
-            # Tokenize (tick_diff, note, velocity)
-            if msg.type == 'note_on' and msg.velocity > 0:
-                tokens.append((tick_diff, msg.note, msg.velocity))
-            elif msg.type == 'note_off' or (msg.type == 'note_on' and msg.velocity == 0):
-                # Tokenize note off event with velocity 0
-                tokens.append((tick_diff, msg.note, 0))
+                # Tokenize (tick_diff, note, velocity)
+                if msg.type == 'note_on' and msg.velocity > 0:
+                    tokens.append((tick_diff, msg.note, msg.velocity))
+                elif msg.type == 'note_off' or (msg.type == 'note_on' and msg.velocity == 0):
+                    # Tokenize note off event with velocity 0
+                    tokens.append((tick_diff, msg.note, 0))
 
-    return tokens
+        return tokens
+
+    except (OSError, ValueError) as e:
+        # Catching common file-related errors or parsing errors
+        print(f"Skipping {file_path} due to an error: {str(e)}")
 
 def tokenize_midi_files(file_paths):
     """Tokenize all MIDI files from a given list of file paths and combine their tokens."""
     all_tokens = []
 
     for file_path in file_paths:
-        try:
-            print(f"Processing {file_path}...")
+        print(f"Processing {file_path}...")
 
-            # Try to parse and tokenize the MIDI file
-            tokens = parse_midi(file_path)
+        # Try to parse and tokenize the MIDI file
+        tokens = parse_midi(file_path)
 
-            # Add the tokens from this file to the total token list
-            all_tokens.extend(tokens)
-
-        except (OSError, ValueError) as e:
-            # Catching common file-related errors or parsing errors
-            print(f"Skipping {file_path} due to an error: {str(e)}")
+        # Add the tokens from this file to the total token list
+        all_tokens.extend(tokens)
 
     return all_tokens
 
