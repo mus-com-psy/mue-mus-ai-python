@@ -135,10 +135,11 @@ class MidiTransformer(nn.Module):
 
     def forward(self, src, tgt):
         # Embed the input tokens (tick, note, velocity)
+        import pdb; pdb.set_trace()
         src = self.embeddingSrc(src)
 
         # Embed the output tokens (tick, note, velocity)
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         tgt = torch.unsqueeze(tgt, dim=1)
         tgt = self.embeddingTgt(tgt)
 
