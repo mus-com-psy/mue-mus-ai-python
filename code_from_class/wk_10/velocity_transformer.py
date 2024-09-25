@@ -11,7 +11,58 @@ import torch.optim as optim
 import tqdm
 
 
+# 2. Define (user-specific) paths
+# Example usage:
+midi_directory = '/home/txc970/project_files/midis_for_mue_music_ai/hip_hop_mido'
+# midi_directory = './dataset/hip_hop_midi/preprocessed'
 
+
+# 3. Set parameters
+sequence_length = 50
+test_size = 0.2
+val_size = 0.1
+random_seed = 42
+# Model instantiation
+input_dim = 3  # tick_diff, note, velocity
+model_dim = 128
+num_heads = 4
+num_layers = 4
+output_dim = 1  # Predicting velocity
+# Training parameters
+num_epochs = 10
+batch_size = 32
+learning_rate = 0.001
+
+
+# 4. Declare/initialize output variables
+train_files, val_files, test_files = split_midi_files(midi_directory)
+model = MidiTransformer(input_dim, model_dim, num_heads, num_layers, output_dim)
+
+# 5. Iterate to import input files
+# 6. Extract features/tokenize
+train_tokens = tokenize_midi_files(train_files)
+val_tokens = tokenize_midi_files(val_files)
+test_tokens = tokenize_midi_files(test_files)
+print(f"Training tokens: {len(train_tokens)}, Validation tokens: {len(val_tokens)}, Test tokens: {len(test_tokens)}")
+
+X_train, y_train = prepare_dataset(train_tokens, sequence_length=sequence_length)
+X_val, y_val = prepare_dataset(val_tokens, sequence_length=sequence_length)
+X_test, y_test = prepare_dataset(test_tokens, sequence_length=sequence_length)
+
+print(f"Training sequences: {X_train.shape}, Validation sequences: {X_val.shape}, Test sequences: {X_test.shape}")
+
+# 7. Train/infer from model
+train_model(model, X_train, y_train, X_val, y_val, num_epochs, batch_size, learning_rate)
+predicted_velocity = predict_velocity(model, X_test[0])
+print(f"Predicted Velocity: {predicted_velocity}")
+
+# 8. Append results to one or more to-be-output variables
+# 9. Plot/visualize/sonify results
+# 10. Write outputs to file (sometimes after each loop, to avoid exceeding memory limitations)
+
+
+
+# Helper functions/classes
 def parse_midi(file_path):
     """Parse a single MIDI file and extract tokenized representation."""
     try:
@@ -59,7 +110,7 @@ def tokenize_midi_files(file_paths):
 
     return all_tokens
 
-def split_midi_files(directory_path, test_size=0.2, val_size=0.1, random_seed=42):
+def split_midi_files(directory_path, test_size, val_size, random_seed):
     """
     Splits the MIDI files in a directory into training, validation, and test sets.
 
@@ -76,22 +127,7 @@ def split_midi_files(directory_path, test_size=0.2, val_size=0.1, random_seed=42
 
     return train_files, val_files, test_files
 
-# Example usage:
-# midi_directory = '/home/txc970/project_files/midis_for_mue_music_ai/hip_hop_midi/mid_no_err'
-midi_directory = './dataset/hip_hop_midi/preprocessed'
-
-# Step 1: Split MIDI files into train, val, test sets
-train_files, val_files, test_files = split_midi_files(midi_directory)
-
-# Step 2: Tokenize each set separately
-train_tokens = tokenize_midi_files(train_files)
-val_tokens = tokenize_midi_files(val_files)
-test_tokens = tokenize_midi_files(test_files)
-
-print(f"Training tokens: {len(train_tokens)}, Validation tokens: {len(val_tokens)}, Test tokens: {len(test_tokens)}")
-
-
-def prepare_dataset(tokenized_sequences, sequence_length=50):
+def prepare_dataset(tokenized_sequences, sequence_length):
     """
     Prepares the dataset by splitting into sequences of a fixed length.
     Each sequence will be used to predict the velocity of the next note.
@@ -110,17 +146,7 @@ def prepare_dataset(tokenized_sequences, sequence_length=50):
 
     return np.array(X), np.array(y)
 
-# Step 3: Prepare the datasets
-sequence_length = 50
-
-X_train, y_train = prepare_dataset(train_tokens, sequence_length=sequence_length)
-X_val, y_val = prepare_dataset(val_tokens, sequence_length=sequence_length)
-X_test, y_test = prepare_dataset(test_tokens, sequence_length=sequence_length)
-
-print(f"Training sequences: {X_train.shape}, Validation sequences: {X_val.shape}, Test sequences: {X_test.shape}")
-
-
-# 3. PyTorch Transformer Model
+# PyTorch transformer model
 class MidiTransformer(nn.Module):
     def __init__(self, input_dim, model_dim, num_heads, num_layers, output_dim, dropout=0.1):
         super(MidiTransformer, self).__init__()
@@ -159,18 +185,7 @@ class MidiTransformer(nn.Module):
         output = self.fc(transformer_out)
         return output
 
-# Model instantiation
-input_dim = 3  # tick_diff, note, velocity
-model_dim = 128
-num_heads = 4
-num_layers = 4
-output_dim = 1  # Predicting velocity
-
-model = MidiTransformer(input_dim, model_dim, num_heads, num_layers, output_dim)
-
-
-# 4. Training Loop
-def train_model(model, X_train, y_train, X_val, y_val, num_epochs=10, batch_size=32, learning_rate=0.001):
+def train_model(model, X_train, y_train, X_val, y_val, num_epochs, batch_size, learning_rate):
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     criterion = nn.MSELoss()
 
@@ -205,18 +220,9 @@ def train_model(model, X_train, y_train, X_val, y_val, num_epochs=10, batch_size
 
         print(f"Epoch {epoch+1}/{num_epochs}, Training Loss: {running_loss/len(train_loader)}, Validation Loss: {val_loss/len(val_loader)}")
 
-# Training the model
-train_model(model, X_train, y_train, X_val, y_val, num_epochs=10)
-
-
-# 5. Inference
 def predict_velocity(model, input_sequence):
     model.eval()
     with torch.no_grad():
         input_tensor = torch.Tensor(input_sequence).unsqueeze(0)  # Add batch dimension
         output = model(input_tensor)
         return output.item()
-
-# Example prediction
-predicted_velocity = predict_velocity(model, X_test[0])
-print(f"Predicted Velocity: {predicted_velocity}")
