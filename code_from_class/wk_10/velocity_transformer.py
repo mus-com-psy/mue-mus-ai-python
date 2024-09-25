@@ -1,68 +1,43 @@
-# Some code from ChatGPT's Python LLM for training a transformer neural network architecture to predict the velocity of the next note.
+# Some code from ChatGPT's Python LLM for training a transformer neural network architecture to predict the velocity of the next note. With substantial editing and correction by Chenyu Gao and Tom Collins.
 
-# 1. Requirements/dependencies
-import mido
-import os
-import numpy as np
-from sklearn.model_selection import train_test_split
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import tqdm
+# 0. Helper functions/classes
+def split_midi_files(directory_path, test_size, val_size, random_seed):
+    """
+    Splits the MIDI files in a directory into training, validation, and test sets.
 
+    The files are split so that no tokens from the same MIDI file appear in more than one set.
+    """
+    # Get all the MIDI files in the directory
+    midi_files = [os.path.join(directory_path, f) for f in os.listdir(directory_path) if f.endswith('.mid')]
 
-# 2. Define (user-specific) paths
-# Example usage:
-midi_directory = '/home/txc970/project_files/midis_for_mue_music_ai/hip_hop_mido'
-# midi_directory = './dataset/hip_hop_midi/preprocessed'
+    # Split into train+val and test sets
+    train_val_files, test_files = train_test_split(midi_files, test_size=test_size, random_state=random_seed)
 
+    # Further split the train+val set into train and validation sets
+    train_files, val_files = train_test_split(train_val_files, test_size=val_size / (1 - test_size), random_state=random_seed)
 
-# 3. Set parameters
-sequence_length = 50
-test_size = 0.2
-val_size = 0.1
-random_seed = 42
-# Model instantiation
-input_dim = 3  # tick_diff, note, velocity
-model_dim = 128
-num_heads = 4
-num_layers = 4
-output_dim = 1  # Predicting velocity
-# Training parameters
-num_epochs = 10
-batch_size = 32
-learning_rate = 0.001
+    return train_files, val_files, test_files
 
+def tokenize_midi_files(file_paths):
+    """Tokenize all MIDI files from a given list of file paths and combine their tokens."""
+    all_tokens = []
 
-# 4. Declare/initialize output variables
-train_files, val_files, test_files = split_midi_files(midi_directory)
-model = MidiTransformer(input_dim, model_dim, num_heads, num_layers, output_dim)
+    for file_path in file_paths:
+        print(f"Processing {file_path}...")
 
-# 5. Iterate to import input files
-# 6. Extract features/tokenize
-train_tokens = tokenize_midi_files(train_files)
-val_tokens = tokenize_midi_files(val_files)
-test_tokens = tokenize_midi_files(test_files)
-print(f"Training tokens: {len(train_tokens)}, Validation tokens: {len(val_tokens)}, Test tokens: {len(test_tokens)}")
+        # Try to parse and tokenize the MIDI file
+        try:
+            tokens = parse_midi(file_path)
 
-X_train, y_train = prepare_dataset(train_tokens, sequence_length=sequence_length)
-X_val, y_val = prepare_dataset(val_tokens, sequence_length=sequence_length)
-X_test, y_test = prepare_dataset(test_tokens, sequence_length=sequence_length)
+            # Add the tokens from this file to the total token list
+            all_tokens.extend(tokens)
 
-print(f"Training sequences: {X_train.shape}, Validation sequences: {X_val.shape}, Test sequences: {X_test.shape}")
+        except( OSError, ValueError) as e:
+            # Catching common file-related errors or parsing errors
+            print(f"Skipping {file_path} due to an error: {str(e)}")
 
-# 7. Train/infer from model
-train_model(model, X_train, y_train, X_val, y_val, num_epochs, batch_size, learning_rate)
-predicted_velocity = predict_velocity(model, X_test[0])
-print(f"Predicted Velocity: {predicted_velocity}")
+    return all_tokens
 
-# 8. Append results to one or more to-be-output variables
-# 9. Plot/visualize/sonify results
-# 10. Write outputs to file (sometimes after each loop, to avoid exceeding memory limitations)
-
-
-
-# Helper functions/classes
 def parse_midi(file_path):
     """Parse a single MIDI file and extract tokenized representation."""
     try:
@@ -89,43 +64,6 @@ def parse_midi(file_path):
         print(f"Skipping {file_path} due to an error: {str(e)}")
 
         return
-
-def tokenize_midi_files(file_paths):
-    """Tokenize all MIDI files from a given list of file paths and combine their tokens."""
-    all_tokens = []
-
-    for file_path in file_paths:
-        print(f"Processing {file_path}...")
-
-        # Try to parse and tokenize the MIDI file
-        try:
-            tokens = parse_midi(file_path)
-
-            # Add the tokens from this file to the total token list
-            all_tokens.extend(tokens)
-
-        except( OSError, ValueError) as e:
-            # Catching common file-related errors or parsing errors
-            print(f"Skipping {file_path} due to an error: {str(e)}")
-
-    return all_tokens
-
-def split_midi_files(directory_path, test_size, val_size, random_seed):
-    """
-    Splits the MIDI files in a directory into training, validation, and test sets.
-
-    The files are split so that no tokens from the same MIDI file appear in more than one set.
-    """
-    # Get all the MIDI files in the directory
-    midi_files = [os.path.join(directory_path, f) for f in os.listdir(directory_path) if f.endswith('.mid')]
-
-    # Split into train+val and test sets
-    train_val_files, test_files = train_test_split(midi_files, test_size=test_size, random_state=random_seed)
-
-    # Further split the train+val set into train and validation sets
-    train_files, val_files = train_test_split(train_val_files, test_size=val_size / (1 - test_size), random_state=random_seed)
-
-    return train_files, val_files, test_files
 
 def prepare_dataset(tokenized_sequences, sequence_length):
     """
@@ -226,3 +164,64 @@ def predict_velocity(model, input_sequence):
         input_tensor = torch.Tensor(input_sequence).unsqueeze(0)  # Add batch dimension
         output = model(input_tensor)
         return output.item()
+
+
+# 1. Requirements/dependencies
+import mido
+import os
+import numpy as np
+from sklearn.model_selection import train_test_split
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import tqdm
+
+
+# 2. Define (user-specific) paths
+# Example usage:
+midi_directory = '/home/txc970/project_files/midis_for_mue_music_ai/hip_hop_mido'
+# midi_directory = './dataset/hip_hop_midi/preprocessed'
+
+
+# 3. Set parameters
+sequence_length = 50
+test_size = 0.2
+val_size = 0.1
+random_seed = 42
+# Model instantiation
+input_dim = 3  # tick_diff, note, velocity
+model_dim = 128
+num_heads = 4
+num_layers = 4
+output_dim = 1  # Predicting velocity
+# Training parameters
+num_epochs = 10
+batch_size = 32
+learning_rate = 0.001
+
+
+# 4. Declare/initialize output variables
+train_files, val_files, test_files = split_midi_files(midi_directory)
+model = MidiTransformer(input_dim, model_dim, num_heads, num_layers, output_dim)
+
+# 5. Iterate to import input files
+# 6. Extract features/tokenize
+train_tokens = tokenize_midi_files(train_files)
+val_tokens = tokenize_midi_files(val_files)
+test_tokens = tokenize_midi_files(test_files)
+print(f"Training tokens: {len(train_tokens)}, Validation tokens: {len(val_tokens)}, Test tokens: {len(test_tokens)}")
+
+X_train, y_train = prepare_dataset(train_tokens, sequence_length=sequence_length)
+X_val, y_val = prepare_dataset(val_tokens, sequence_length=sequence_length)
+X_test, y_test = prepare_dataset(test_tokens, sequence_length=sequence_length)
+
+print(f"Training sequences: {X_train.shape}, Validation sequences: {X_val.shape}, Test sequences: {X_test.shape}")
+
+# 7. Train/infer from model
+train_model(model, X_train, y_train, X_val, y_val, num_epochs, batch_size, learning_rate)
+predicted_velocity = predict_velocity(model, X_test[0])
+print(f"Predicted Velocity: {predicted_velocity}")
+
+# 8. Append results to one or more to-be-output variables
+# 9. Plot/visualize/sonify results
+# 10. Write outputs to file (sometimes after each loop, to avoid exceeding memory limitations)
