@@ -1,5 +1,17 @@
 # Some code from ChatGPT's Python LLM for training a transformer neural network architecture to predict the velocity of the next note. With substantial editing and correction by Chenyu Gao and Tom Collins.
 
+
+# 1. Requirements/dependencies
+import mido
+import os
+import numpy as np
+from sklearn.model_selection import train_test_split
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import tqdm
+
+
 # 0. Helper functions/classes
 def split_midi_files(directory_path, test_size, val_size, random_seed):
     """
@@ -164,17 +176,6 @@ def predict_velocity(model, input_sequence):
         input_tensor = torch.Tensor(input_sequence).unsqueeze(0)  # Add batch dimension
         output = model(input_tensor)
         return output.item()
-
-
-# 1. Requirements/dependencies
-import mido
-import os
-import numpy as np
-from sklearn.model_selection import train_test_split
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import tqdm
 
 
 # 2. Define (user-specific) paths
