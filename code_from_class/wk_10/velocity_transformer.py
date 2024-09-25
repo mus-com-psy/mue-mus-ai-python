@@ -202,7 +202,7 @@ learning_rate = 0.001
 
 
 # 4. Declare/initialize output variables
-train_files, val_files, test_files = split_midi_files(midi_directory)
+train_files, val_files, test_files = split_midi_files(midi_directory, test_size, val_size, random_seed)
 model = MidiTransformer(input_dim, model_dim, num_heads, num_layers, output_dim)
 
 # 5. Iterate to import input files
