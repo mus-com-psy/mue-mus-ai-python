@@ -83,12 +83,12 @@ def prepare_dataset(tokenized_sequences, sequence_length):
     Each sequence will be used to predict the velocity of the next note.
     """
     X, y = [], []
-    for i in range(len(tokenized_sequences) - sequence_length):
+    for i in range(len(tokenized_sequences) - (sequence_length + 1)):
         # Extract the sequence
         sequence = tokenized_sequences[i:i + sequence_length]
 
         # The next token's velocity will be the target
-        next_velocity = tokenized_sequences[i + sequence_length][2]
+        next_velocity = tokenized_sequences[i + sequence_length + 1][2]
 
         # Append the sequence and the target velocity
         X.append(sequence)
@@ -199,6 +199,7 @@ output_dim = 1  # Predicting velocity
 num_epochs = 1
 batch_size = 32
 learning_rate = 0.001
+begin_token = 500
 
 
 # 4. Declare/initialize output variables
