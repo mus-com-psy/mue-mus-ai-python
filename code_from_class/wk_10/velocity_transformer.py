@@ -111,15 +111,18 @@ class MidiTransformer(nn.Module):
         )
         self.fc = nn.Linear(model_dim, output_dim)
 
-    def forward(self, src, tgt):
+    def forward(self, src):
         # Embed the input tokens [batch_size, seq_len, (tick, note, velocity)]
         # import pdb; pdb.set_trace()
         src = self.embeddingSrc(src)
+        batch_size, _, _ = src.shape
 
         # Embed the output tokens [batch_size, seq_len, (velocity)]
         # tgt = torch.unsqueeze(tgt, dim=1)
-        import pdb;pdb.set_trace()
-        tgt = torch.unsqueeze(begin_token, dim=1)
+        tgt = torch.tensor(begin_token) # Create tensor from the token.
+        tgt = torch.unsqueeze(tgt, dim=0) # From tensor(500) to tensor([500])
+        # Then, we will further extend the tensor to match the batch size
+        tgt = tgt.expand(batch_size,1) # new_tgt.shape = torch.Size([32, 1])
         
         # tgt = torch.unsqueeze(tgt, dim=2)
         # import pdb; pdb.set_trace()
@@ -155,7 +158,7 @@ def train_model(model, X_train, y_train, X_val, y_val, num_epochs, batch_size, l
         for inputs, targets in train_loader:
             optimizer.zero_grad()
             targets = torch.unsqueeze(targets, dim=1)
-            outputs = model(inputs, targets) # nn.Transformer require both the sequence to the encoder, and that to the decoder as input.
+            outputs = model(inputs) # nn.Transformer require both the sequence to the encoder, and that to the decoder as input.
             loss = criterion(outputs, targets)
             print("loss", loss)
             loss.backward()
@@ -167,7 +170,7 @@ def train_model(model, X_train, y_train, X_val, y_val, num_epochs, batch_size, l
         print(">>>>>>>Validation stage:")
         with torch.no_grad():
             for inputs, targets in val_loader:
-                outputs = model(inputs, targets)
+                outputs = model(inputs)
                 loss = criterion(outputs, targets)
                 val_loss += loss.item()
 
