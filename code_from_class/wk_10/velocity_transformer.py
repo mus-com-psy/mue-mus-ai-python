@@ -125,7 +125,7 @@ class MidiTransformer(nn.Module):
         tgt = tgt.expand(batch_size,1) # new_tgt.shape = torch.Size([32, 1])
         
         # tgt = torch.unsqueeze(tgt, dim=2)
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         tgt = self.embeddingTgt(tgt)
 
         # Chenyu added 'batch_first=True' in line 133, so we don't need to reshape anymore.
