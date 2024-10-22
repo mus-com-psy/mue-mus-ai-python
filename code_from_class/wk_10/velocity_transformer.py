@@ -118,8 +118,9 @@ class MidiTransformer(nn.Module):
 
         # Embed the output tokens [batch_size, seq_len, (velocity)]
         # tgt = torch.unsqueeze(tgt, dim=1)
-        tgt = torch.unsqueeze(begin_token, dim=1)
         import pdb;pdb.set_trace()
+        tgt = torch.unsqueeze(begin_token, dim=1)
+        
         # tgt = torch.unsqueeze(tgt, dim=2)
         # import pdb; pdb.set_trace()
         tgt = self.embeddingTgt(tgt)
