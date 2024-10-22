@@ -125,7 +125,7 @@ class MidiTransformer(nn.Module):
         # Then, we will further extend the tensor to match the batch size
         tgt = tgt.expand(batch_size,1) # new_tgt.shape = torch.Size([32, 1])
         
-        # tgt = torch.unsqueeze(tgt, dim=2)
+        tgt = torch.unsqueeze(tgt, dim=2)
         # import pdb; pdb.set_trace()
         tgt = self.embeddingTgt(tgt)
 
