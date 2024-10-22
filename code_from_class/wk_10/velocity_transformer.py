@@ -119,6 +119,7 @@ class MidiTransformer(nn.Module):
         # Embed the output tokens [batch_size, seq_len, (velocity)]
         # tgt = torch.unsqueeze(tgt, dim=1)
         tgt = torch.unsqueeze(begin_token, dim=1)
+        import pdb;pdb.set_trace()
         # tgt = torch.unsqueeze(tgt, dim=2)
         # import pdb; pdb.set_trace()
         tgt = self.embeddingTgt(tgt)
@@ -200,7 +201,7 @@ output_dim = 1  # Predicting velocity
 num_epochs = 1
 batch_size = 32
 learning_rate = 0.001
-begin_token = 500
+begin_token = 500 # This token is the first token for transformer decoder's input.
 
 
 # 4. Declare/initialize output variables
