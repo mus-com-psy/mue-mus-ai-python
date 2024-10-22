@@ -120,12 +120,13 @@ class MidiTransformer(nn.Module):
         # Embed the output tokens [batch_size, seq_len, (velocity)]
         # tgt = torch.unsqueeze(tgt, dim=1)
         tgt = torch.tensor(begin_token) # Create tensor from the token.
+        tgt = tgt.to(src.dtype)
         tgt = torch.unsqueeze(tgt, dim=0) # From tensor(500) to tensor([500])
         # Then, we will further extend the tensor to match the batch size
         tgt = tgt.expand(batch_size,1) # new_tgt.shape = torch.Size([32, 1])
         
         # tgt = torch.unsqueeze(tgt, dim=2)
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         tgt = self.embeddingTgt(tgt)
 
         # Chenyu added 'batch_first=True' in line 133, so we don't need to reshape anymore.
