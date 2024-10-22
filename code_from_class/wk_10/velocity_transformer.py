@@ -182,8 +182,8 @@ def predict_velocity(model, input_sequence):
 
 # 2. Define (user-specific) paths
 # Example usage:
-midi_directory = '/home/txc970/project_files/midis_for_mue_music_ai/hip_hop_mido'
-# midi_directory = './dataset/hip_hop_midi/preprocessed'
+# midi_directory = '/home/txc970/project_files/midis_for_mue_music_ai/hip_hop_mido'
+midi_directory = './dataset/hip_hop_midi/preprocessed'
 
 
 # 3. Set parameters
